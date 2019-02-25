@@ -18,6 +18,10 @@ and provides an easy way to mock methods including constructors and destructors.
 * Support for x64
 * Port for Lazarus FPC
 
-The library was tested under the Delphi Seattle and Tokyo using DUnit and DUnitX.
 
+## Dependencies: ##
+
+* [DDetours](https://github.com/MahdiSafsafi/DDetours)
+
+The library was tested under the Delphi Seattle and Tokyo using DUnit and DUnitX.
 Please, if you find any bug, feel free to report it.
