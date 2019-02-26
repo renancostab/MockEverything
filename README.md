@@ -23,5 +23,19 @@ and provides an easy way to mock methods including constructors and destructors.
 
 * [DDetours](https://github.com/MahdiSafsafi/DDetours)
 
+## How to use: ##
+
+* Add the DDetours in your project
+* Use the unit MockEverything
+* May you want add also the MockRttiUtils
+* Enjoy 
+
+## Tips: ##
+
+* Use the TMockDetour.Get.RestoreEverything in the TearDown to restore the original behavior of the class.
+* Load the MapFile just once, usually before the Application.Run.
+* Avoid use TMockDetour.Get.MockEvertyhing in huge classes, it can be slow.
+* It's impossible to mock automatically methods private and protected, except when it was explicitly exported via Rtti.
+
 The library was tested under the Delphi Seattle and Tokyo using DUnit and DUnitX.
 Please, if you find any bug, feel free to report it.
