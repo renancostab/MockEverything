@@ -41,5 +41,7 @@ The **MockEvertyhing** is a framework to mock functions and procedures during th
 * Avoid use TMockDetour.Get.MockEvertyhing in huge classes, it can be slow.
 * It's impossible to mock automatically methods private and protected, except when it was explicitly exported via Rtti.
 
+Sponsor: [Softplan](https://www.softplan.com.br/)
+
 The library was tested under the Delphi Seattle and Tokyo using DUnit and DUnitX.
 Please, if you find any bug, feel free to report it.
