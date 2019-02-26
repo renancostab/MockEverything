@@ -31,7 +31,7 @@ The **MockEvertyhing** is a framework to mock functions and procedures during th
 
 * Add the DDetours in your project
 * Use the unit MockEverything
-* May you want add also the MockRttiUtils
+* You may want add also the MockRttiUtils
 * Enjoy 
 
 ## Tips: ##
