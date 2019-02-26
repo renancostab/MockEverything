@@ -1,6 +1,10 @@
+
+![Version](https://img.shields.io/badge/version-v1-yellow.svg)
+![License](https://img.shields.io/github/license/renancostab/mockeverything.svg)
+![Lang](https://img.shields.io/github/languages/top/renancostab/mockeverything.svg)
+
 # MockEverything
-The **MockEvertyhing** is a framework to mock functions and procedures during the process of unit testing. It was created based on the DDetours Library
-and provides an easy way to mock methods including constructors and destructors.
+The **MockEvertyhing** is a framework to mock functions and procedures during the process of unit testing. It was created based on the DDetours Library and provides an easy way to mock methods including constructors and destructors.
 
 
 ## Features: ##
