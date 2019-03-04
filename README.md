@@ -42,7 +42,7 @@ The **MockEverything** is a framework to mock functions and procedures during th
 
 * Use the TMockDetour.Get.RestoreEverything in the TearDown to restore the original behavior of the class.
 * Load the MapFile just once, usually before the Application.Run.
-* Avoid use TMockDetour.Get.MockEvertyhing in huge classes, it can be slow.
+* Avoid use TMockDetour.Get.MockEverything in huge classes, it can be slow.
 * It's impossible to mock automatically methods private and protected, except when it was explicitly exported via Rtti.
 
 Sponsor: [Softplan](https://www.softplan.com.br/)
