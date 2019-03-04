@@ -49,3 +49,46 @@ Sponsor: [Softplan](https://www.softplan.com.br/)
 
 The library was tested under the Delphi XE, Seattle, Tokyo and Rio using DUnit and DUnitX.
 Please, if you find any bug, feel free to report it.
+
+## Quick Example ##
+
+```Pascal
+unit Demo;
+
+interface
+
+uses
+  MockEverything;
+  
+type
+  TClassTest = class(TObject)
+  private
+  public
+    function Sum(A, B: Integer): Integer;
+  end;
+  
+implementation
+
+function TClassTest.Sum(A, B: Integer): Integer;
+begin
+  Result := A + B;
+end;
+ 
+// How to mock
+
+function FakeSum(AObject: TObject; A, B: Integer): Integer;
+begin
+  Result := A - B; // Subtraction instead of a sum
+end;
+
+begin
+  // Mock the sum function
+  TMockDetour.Get.Mock(TClassTest, 'Sum', @FakeSum);
+  
+  // Mocking everything including the constructor and destructor
+  // Sum will return 0 (zero)
+  TMockDetour.Get.MockEverything(TClassTest);
+  
+  // Restore the original behavior
+  TMockDetour.Get.RestoreEverything;
+end;
