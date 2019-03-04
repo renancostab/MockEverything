@@ -22,9 +22,9 @@ The **MockEverything** is a framework to mock functions and procedures during th
 * Support for x64
 * Port for Lazarus FPC
 
-## What's new in 1.1: ##
-* Better demo using map file for mock private and protected functions
-* Code adaption for lower versions of Delphi 
+## What's new in 1.1 version: ##
+* Better demo using map file to mock private and protected functions
+* Code adaption to lower versions of Delphi 
   (The project was tested under Delphi XE)
 
 ## Dependencies: ##
