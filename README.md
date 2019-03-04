@@ -1,5 +1,5 @@
 
-![Version](https://img.shields.io/badge/version-v1-yellow.svg)
+![Version](https://img.shields.io/badge/version-v1.1-yellow.svg)
 ![License](https://img.shields.io/github/license/renancostab/mockeverything.svg)
 ![Lang](https://img.shields.io/github/languages/top/renancostab/mockeverything.svg)
 
@@ -22,6 +22,10 @@ The **MockEvertyhing** is a framework to mock functions and procedures during th
 * Support for x64
 * Port for Lazarus FPC
 
+## What's new in 1.1: ##
+* Better demo using map file for mock private and protected functions
+* Code adaption for lower versions of Delphi 
+  (The project was tested under Delphi XE)
 
 ## Dependencies: ##
 
@@ -43,5 +47,5 @@ The **MockEvertyhing** is a framework to mock functions and procedures during th
 
 Sponsor: [Softplan](https://www.softplan.com.br/)
 
-The library was tested under the Delphi Seattle and Tokyo using DUnit and DUnitX.
+The library was tested under the Delphi XE, Seattle, Tokyo and Rio using DUnit and DUnitX.
 Please, if you find any bug, feel free to report it.
