@@ -3,9 +3,8 @@ unit Demo;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, ClassTest, MockEverything, MockRttiUtils,
-  System.Generics.Collections;
+  SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls,
+  ClassTest, MockEverything, MockRttiUtils, Generics.Collections;
 
 type
   TForm1 = class(TForm)
@@ -15,11 +14,15 @@ type
     Button3: TButton;
     Button4: TButton;
     Button5: TButton;
+    Button6: TButton;
+    Button7: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -32,6 +35,16 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure FakePrivate(const AObject: TObject);
+begin
+  Form1.Log.Lines.Add('Mock Private');
+end;
+
+procedure FakeProtected(const AObject: TObject);
+begin
+  Form1.Log.Lines.Add('Mock Protected');
+end;
 
 function FakeSum(const AObject: TObject; A, B: Integer): Integer;
 begin
@@ -53,9 +66,6 @@ end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-  // private and protected methods, use the
-  // TMockDetour.Get.LoadMapAddress('FileMap.map');
-
   TMockDetour.Get.MockConstructor(TClassTest, @FakeCreate);
   TMockDetour.Get.MockDestructor(TClassTest, @FakeDestroy);
   TMockDetour.Get.Mock(TClassTest, 'Sum', @FakeSum);
@@ -80,9 +90,27 @@ procedure TForm1.Button5Click(Sender: TObject);
 var
   Obj: TClassTest;
 begin
+  Log.Clear;
+
   Obj := TClassTest.Create;
-  Log.Lines.Add(Obj.Sum(10, 8).ToString);
+  Log.Lines.Add(IntToStr(Obj.Sum(10, 8)));
+  Obj.CallPrivate;
+  Obj.CallProtected;
   Obj.Free;
+end;
+
+procedure TForm1.Button6Click(Sender: TObject);
+begin
+  // private and protected methods, use the LoadMapAddress
+  // Make sure your project was compiled with Linking -> Map File -> Detailed
+  if FileExists('MockDemo.map') then
+    TMockDetour.Get.LoadMapAddress('MockDemo.map');
+end;
+
+procedure TForm1.Button7Click(Sender: TObject);
+begin
+  TMockDetour.Get.Mock(TClassTest, 'PrivateProc', @FakePrivate);
+  TMockDetour.Get.Mock(TClassTest, 'ProtectedProc', @FakeProtected);
 end;
 
 end.

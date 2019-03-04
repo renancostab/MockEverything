@@ -19,8 +19,7 @@ unit MockEverything;
 interface
 
 uses
-  System.SysUtils, System.Generics.Collections, System.Rtti, System.TypInfo, DDetours,
-  MockProcedures, MockCommon, MockMap;
+  SysUtils, Generics.Collections, Rtti, TypInfo, DDetours, MockProcedures, MockCommon, MockMap;
 
 type
   TProcedure = procedure;
@@ -290,9 +289,9 @@ begin
     if not Assigned(Method) then
       Continue;
 
-    Code := (Method.IsConstructor.ToInteger shl 2) or
-            (Method.IsDestructor.ToInteger shl 1) or
-             Assigned(Method.ReturnType).ToInteger;
+    Code := (Integer(Method.IsConstructor) shl 2) or
+            (Integer(Method.IsDestructor) shl 1) or
+             Integer(Assigned(Method.ReturnType));
 
     case Code of
       0: Detour := @MockNoReturn;

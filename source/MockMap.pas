@@ -19,7 +19,7 @@ unit MockMap;
 interface
 
 uses
-  System.SysUtils, System.Classes, System.Rtti, System.Generics.Collections;
+  SysUtils, Classes, Rtti, Generics.Collections;
 
 type
   TMapFile = class(TObject)
@@ -32,6 +32,7 @@ type
     procedure ParseAddress(AMapFile: TStringList);
 
     function StringInSet(const AValue: string; const ASet: array of string): Boolean;
+    function StrSplit(const AValue: string; const ADelimiter: Char): TArray<string>;
   public
     constructor Create(const AFile: string);
     destructor Destroy; override;
@@ -82,7 +83,7 @@ function TMapFile.GetMethods(AClass: TClass; const AMethod: string): TArray<Poin
 var
   Key: string;
 begin
-  Key := AClass.QualifiedClassName + '.' + AMethod;
+  Key := Format('%s.%s.%s', [AClass.UnitName, AClass.ClassName, AMethod]);
   if FDict.ContainsKey(Key) then
     Result := FDict[Key].ToArray;
 end;
@@ -128,27 +129,27 @@ var
   List: TList<Pointer>;
 begin
   Start := 0;
-  while not AMapFile[Start].Trim.IsEmpty do
+  while Trim(AMapFile[Start]) <> EmptyStr do
     Inc(Start);
 
   Inc(Start, 4);
   while True do
   begin
-    while not AMapFile[Start].IsEmpty do
+    while AMapFile[Start] <> EmptyStr do
     begin
       Line := AMapFile[Start];
       Inc(Start);
 
-      Indx := Line.IndexOf(':');
-      Code := Line.Substring(0, Indx).Trim.ToInteger;
+      Indx := Pos(':', Line);
+      Code := StrToInt(Trim(Copy(Line, 1, Indx - 1)));
 
       if Code <> 1 then
         Continue;
 
-      Base := Line.Substring(Indx + 1, 8).Trim.Insert(0, '$').ToInteger();
-      Name := Line.Substring(Indx + 9, Line.Length).Trim;
+      Base := StrToInt('$' + Trim(Copy(Line, Indx + 1, 8)));
+      Name := Trim(Copy(Line, Indx + 9, Length(Line)));
 
-      if StringInSet(Name.Split(['.'])[0], IGNORE) then
+      if StringInSet(StrSplit(Name, '.')[0], IGNORE) then
         Continue;
 
       if not FDict.ContainsKey(Name) then
@@ -167,7 +168,7 @@ begin
     end;
 
     Inc(Start, 2);
-    if not AMapFile[Start].Trim.Contains('Address') then
+    if Pos('Address', Trim(AMapFile[Start])) > -1 then
       Break;
 
     Inc(Start, 2);
@@ -181,17 +182,20 @@ var
   Base: Cardinal;
 begin
   Start := 0;
-  while AMapFile[Start].Trim.IsEmpty do
+  while Trim(AMapFile[Start]) = EmptyStr do
     Inc(Start);
 
   Inc(Start);
   for I := 1 to 6 do
   begin
     Line := AMapFile[Start];
-    Indx := Line.IndexOf(':');
-    Code := Line.Substring(0, Indx).Trim.ToInteger;
-    Base := Line.Substring(Indx + 1, 8).Trim.Insert(0, '$').ToInteger;
-    FHeader[Code] := Base;
+    Indx := Pos(':', Line);
+    Code := StrToInt('$' + Trim(Copy(Line, 1, Indx - 1)));
+    if Code < 7 then
+    begin
+      Base := StrToInt('$' + Copy(Line, Indx + 1, 8));
+      FHeader[Code] := Base;
+    end;
     Inc(Start);
   end;
 
@@ -208,6 +212,24 @@ begin
   begin
     if SameText(AValue, ASet[I]) then
       Exit(True);
+  end;
+end;
+
+function TMapFile.StrSplit(const AValue: string; const ADelimiter: Char): TArray<string>;
+var
+  I: Integer;
+  L: TStringList;
+begin
+  L := TStringList.Create;
+  try
+    L.Delimiter := ADelimiter;
+    L.DelimitedText := AValue;
+
+    SetLength(Result, L.Count);
+    for I := 0 to L.Count - 1 do
+      Result[I] := L[I];
+  finally
+    L.Free;
   end;
 end;
 

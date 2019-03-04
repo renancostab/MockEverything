@@ -19,7 +19,7 @@ unit MockProcedures;
 interface
 
 uses
-  System.SysUtils, System.Variants, System.Generics.Collections, System.Rtti, MockCommon;
+  SysUtils, Variants, Generics.Collections, Rtti, TypInfo, MockCommon;
 
 type
   TMockRecord = record

@@ -1,7 +1,7 @@
 program MockDemo;
 
 uses
-  Vcl.Forms,
+  Forms,
   Demo in 'Demo.pas' {Form1},
   MockCommon in '..\source\MockCommon.pas',
   MockEverything in '..\source\MockEverything.pas',
