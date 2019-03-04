@@ -4,7 +4,7 @@
 ![Lang](https://img.shields.io/github/languages/top/renancostab/mockeverything.svg)
 
 # MockEverything
-The **MockEvertyhing** is a framework to mock functions and procedures during the process of unit testing. It was created based on the DDetours project and provides an easy way to mock methods including constructors and destructors.
+The **MockEverything** is a framework to mock functions and procedures during the process of unit testing. It was created based on the DDetours project and provides an easy way to mock methods including constructors and destructors.
 
 
 ## Features: ##
