@@ -40,7 +40,7 @@ type
   function MockPointer(const AObject): Pointer;
   function MockFloat(const AObject): Double;
   function MockObject(const AObject): TObject;
-  function MockArray(const AObject): Pointer;
+  function MockArray(const AObject): TArray<Pointer>;
   function MockRecord(const AObject): TMockRecord;
   function MockAnsiChar(const AObject): AnsiChar;
   function MockAnsiString(const AObject): AnsiString;
@@ -195,12 +195,9 @@ begin
   Result := nil;
 end;
 
-function MockArray(const AObject): Pointer;
-var
-  A: array of Byte;
+function MockArray(const AObject): TArray<Pointer>;
 begin
-  SetLength(A, 0);
-  Result := Pointer(A);
+  SetLength(Result, 0);
 end;
 
 function MockRecord(const AObject): TMockRecord;
