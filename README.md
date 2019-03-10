@@ -1,10 +1,10 @@
 
-![Version](https://img.shields.io/badge/version-v1-yellow.svg)
+![Version](https://img.shields.io/badge/version-v1.1-yellow.svg)
 ![License](https://img.shields.io/github/license/renancostab/mockeverything.svg)
 ![Lang](https://img.shields.io/github/languages/top/renancostab/mockeverything.svg)
 
 # MockEverything
-The **MockEvertyhing** is a framework to mock functions and procedures during the process of unit testing. It was created based on the DDetours project and provides an easy way to mock methods including constructors and destructors.
+The **MockEverything** is a framework to mock functions and procedures during the process of unit testing. It was created based on the DDetours project and provides an easy way to mock methods including constructors and destructors.
 
 
 ## Features: ##
@@ -22,6 +22,10 @@ The **MockEvertyhing** is a framework to mock functions and procedures during th
 * Support for x64
 * Port for Lazarus FPC
 
+## What's new in 1.1 version: ##
+* Better demo using map file to mock private and protected functions
+* Code adaption to lower versions of Delphi 
+  (The project was tested under Delphi XE)
 
 ## Dependencies: ##
 
@@ -38,10 +42,53 @@ The **MockEvertyhing** is a framework to mock functions and procedures during th
 
 * Use the TMockDetour.Get.RestoreEverything in the TearDown to restore the original behavior of the class.
 * Load the MapFile just once, usually before the Application.Run.
-* Avoid use TMockDetour.Get.MockEvertyhing in huge classes, it can be slow.
+* Avoid use TMockDetour.Get.MockEverything in huge classes, it can be slow.
 * It's impossible to mock automatically methods private and protected, except when it was explicitly exported via Rtti.
 
 Sponsor: [Softplan](https://www.softplan.com.br/)
 
-The library was tested under the Delphi Seattle and Tokyo using DUnit and DUnitX.
+The library was tested under the Delphi XE, Seattle, Tokyo and Rio using DUnit and DUnitX.
 Please, if you find any bug, feel free to report it.
+
+## Quick Example ##
+
+```Pascal
+unit Demo;
+
+interface
+
+uses
+  MockEverything;
+  
+type
+  TClassTest = class(TObject)
+  private
+  public
+    function Sum(A, B: Integer): Integer;
+  end;
+  
+implementation
+
+function TClassTest.Sum(A, B: Integer): Integer;
+begin
+  Result := A + B;
+end;
+ 
+// How to mock
+
+function FakeSum(AObject: TObject; A, B: Integer): Integer;
+begin
+  Result := A - B; // Subtraction instead of a sum
+end;
+
+begin
+  // Mock the sum function
+  TMockDetour.Get.Mock(TClassTest, 'Sum', @FakeSum);
+  
+  // Mocking everything including the constructor and destructor
+  // Sum will return 0 (zero)
+  TMockDetour.Get.MockEverything(TClassTest);
+  
+  // Restore the original behavior
+  TMockDetour.Get.RestoreEverything;
+end;
