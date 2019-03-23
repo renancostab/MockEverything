@@ -360,9 +360,9 @@ begin
 
   List := FDict[AClass];
   Context := TRttiContext.Create;
-  for Method in Context.GetType(AClass.ClassInfo).GetDeclaredMethods do
+  for Method in Context.GetType(AClass.ClassInfo).GetMethods do
   begin
-    if not SameText(Method.Name, AMethod) then
+    if (not SameText(Method.Name, AMethod)) or (not SameText(Method.Parent.Name, AClass.ClassName)) then
       Continue;
 
     for I := 0 to List.Count - 1 do
