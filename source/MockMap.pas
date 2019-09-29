@@ -19,7 +19,10 @@ unit MockMap;
 interface
 
 uses
-  SysUtils, Classes, Rtti, Generics.Collections;
+  SysUtils,
+  Classes,
+  Rtti,
+  Generics.Collections;
 
 type
   TMapFile = class(TObject)
@@ -135,45 +138,36 @@ begin
     Inc(Start);
 
   Inc(Start, 4);
-  while True do
+  while AMapFile[Start] <> EmptyStr do
   begin
-    while AMapFile[Start] <> EmptyStr do
+    Line := AMapFile[Start];
+    Inc(Start);
+
+    Indx := Pos(':', Line);
+    Code := StrToInt(Trim(Copy(Line, 1, Indx - 1)));
+
+    if Code <> 1 then
+      Continue;
+
+    Base := StrToInt('$' + Trim(Copy(Line, Indx + 1, 8)));
+    Name := Trim(Copy(Line, Indx + 9, Length(Line)));
+
+    if (not FLoadSystemFunc) and (StringInSet(StrSplit(Name, '.')[0], IGNORE)) then
+      Continue;
+
+    if not FDict.ContainsKey(Name) then
     begin
-      Line := AMapFile[Start];
-      Inc(Start);
-
-      Indx := Pos(':', Line);
-      Code := StrToInt(Trim(Copy(Line, 1, Indx - 1)));
-
-      if Code <> 1 then
-        Continue;
-
-      Base := StrToInt('$' + Trim(Copy(Line, Indx + 1, 8)));
-      Name := Trim(Copy(Line, Indx + 9, Length(Line)));
-
-      if (not FLoadSystemFunc) and (StringInSet(StrSplit(Name, '.')[0], IGNORE)) then
-        Continue;
-
-      if not FDict.ContainsKey(Name) then
-      begin
-        List := TList<Pointer>.Create;
-        FDict.Add(Name, List);
-      end
-      else
-      begin
-        List := FDict[Name];
-      end;
-
-      Address := Pointer(FHeader[Code] + Base);
-      if List.IndexOf(Address) = -1 then
-        List.Add(Address);
+      List := TList<Pointer>.Create;
+      FDict.Add(Name, List);
+    end
+    else
+    begin
+      List := FDict[Name];
     end;
 
-    Inc(Start, 2);
-    if Pos('Address', Trim(AMapFile[Start])) > -1 then
-      Break;
-
-    Inc(Start, 2);
+    Address := Pointer(FHeader[Code] + Base);
+    if List.IndexOf(Address) = -1 then
+      List.Add(Address);
   end;
 end;
 

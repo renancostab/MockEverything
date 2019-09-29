@@ -19,7 +19,14 @@ unit MockEverything;
 interface
 
 uses
-  SysUtils, Generics.Collections, Rtti, TypInfo, DDetours, MockProcedures, MockCommon, MockMap;
+  SysUtils,
+  Rtti,
+  TypInfo,
+  Generics.Collections,
+  DDetours,
+  MockProcedures,
+  MockCommon,
+  MockMap;
 
 type
   TProcedure = procedure;

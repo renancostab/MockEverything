@@ -19,7 +19,9 @@ unit MockRttiUtils;
 interface
 
 uses
-  SysUtils, Classes, Rtti;
+  SysUtils,
+  Classes,
+  Rtti;
 
   procedure SetFieldValue(const AObject: TObject; const AField: string; const AValue: TValue);
   procedure SetPropertyValue(const AObject: TObject; const AProperty: string; const AValue: TValue);
