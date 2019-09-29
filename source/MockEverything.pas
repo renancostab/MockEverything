@@ -49,7 +49,7 @@ type
     destructor Destroy; override;
 
     procedure AddHook(AClass: TClass; AHook: TInstanceHook; AHookType: THookType);
-    procedure LoadMapAddress(const AFile: string);
+    procedure LoadMapAddress(const AFile: string; ALoadSystemFunctions: Boolean = False);
     procedure Mock(AClass: TClass; const AMethod: string; ADetour: Pointer); overload;
     procedure Mock(AClass: TClass; const AMethod: string); overload;
     procedure Mock(AClass: TClass; AMethod: Pointer; ADetour: Pointer); overload;
@@ -310,7 +310,7 @@ begin
   Context.Free;
 end;
 
-procedure TMockDetour.LoadMapAddress(const AFile: string);
+procedure TMockDetour.LoadMapAddress(const AFile: string; ALoadSystemFunctions: Boolean = False);
 begin
   if not FileExists(AFile) then
     raise Exception.CreateFmt('File not found [%s]', [AFile]);
@@ -318,7 +318,7 @@ begin
   if Assigned(FMap) then
     FreeAndNil(FMap);
 
-  FMap := TMapFile.Create(AFile);
+  FMap := TMapFile.Create(AFile, ALoadSystemFunctions);
   FMap.Parse;
 end;
 

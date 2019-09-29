@@ -25,6 +25,7 @@ type
   TMapFile = class(TObject)
   private
     FMapFile: string;
+    FLoadSystemFunc: Boolean;
     FHeader: array [1..6] of Integer;
     FDict: TDictionary<string, TList<Pointer>>;
 
@@ -34,7 +35,7 @@ type
     function StringInSet(const AValue: string; const ASet: array of string): Boolean;
     function StrSplit(const AValue: string; const ADelimiter: Char): TArray<string>;
   public
-    constructor Create(const AFile: string);
+    constructor Create(const AFile: string; ALoadSystemFunctions: Boolean);
     destructor Destroy; override;
 
     procedure Parse;
@@ -48,9 +49,10 @@ implementation
 
 { TMapFile }
 
-constructor TMapFile.Create(const AFile: string);
+constructor TMapFile.Create(const AFile: string; ALoadSystemFunctions: Boolean);
 begin
   FMapFile := AFile;
+  FLoadSystemFunc := ALoadSystemFunctions;
   FillChar(FHeader[1], SizeOf(Integer) * Length(FHeader), 0);
   FDict := TDictionary<string, TList<Pointer>>.Create(1 shl 16);
 end;
@@ -149,7 +151,7 @@ begin
       Base := StrToInt('$' + Trim(Copy(Line, Indx + 1, 8)));
       Name := Trim(Copy(Line, Indx + 9, Length(Line)));
 
-      if StringInSet(StrSplit(Name, '.')[0], IGNORE) then
+      if (not FLoadSystemFunc) and (StringInSet(StrSplit(Name, '.')[0], IGNORE)) then
         Continue;
 
       if not FDict.ContainsKey(Name) then
