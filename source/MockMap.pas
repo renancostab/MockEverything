@@ -30,6 +30,7 @@ type
 
     procedure ParseHeader(AMapFile: TStringList);
     procedure ParseAddress(AMapFile: TStringList);
+    procedure Delphi11FixAddress;
 
     function StringInSet(const AValue: string; const ASet: array of string): Boolean;
     function StrSplit(const AValue: string; const ADelimiter: Char): TArray<string>;
@@ -53,6 +54,29 @@ begin
   FMapFile := AFile;
   FillChar(FHeader[1], SizeOf(Integer) * Length(FHeader), 0);
   FDict := TDictionary<string, TList<Pointer>>.Create(1 shl 16);
+end;
+
+procedure TMapFile.Delphi11FixAddress;
+var
+  Current: Pointer;
+  Expected: Pointer;
+  Offset: Integer;
+  I: Integer;
+  Key: string;
+  List: TList<Pointer>;
+begin
+  Current := @TObject.Create;
+  Expected := GetMethod(TObject, 'Create');
+  Offset := Integer(Expected) - Integer(Current);
+  if Offset = 0 then
+    Exit;
+
+  for Key in FDict.Keys do
+  begin
+    List := FDict[Key];
+    for I := 0 to List.Count - 1 do
+      List[I] := Pointer(Integer(List[I]) - Offset);
+  end;
 end;
 
 destructor TMapFile.Destroy;
@@ -99,6 +123,7 @@ begin
       Map.LoadFromFile(FMapFile);
       ParseHeader(Map);
       ParseAddress(Map);
+      Delphi11FixAddress;
     except
       on E: Exception do
         raise Exception.CreateFmt('Failed to parse the map address %s [%s]', [sLineBreak, E.Message]);
@@ -148,9 +173,6 @@ begin
 
       Base := StrToInt('$' + Trim(Copy(Line, Indx + 1, 8)));
       Name := Trim(Copy(Line, Indx + 9, Length(Line)));
-
-      if StringInSet(StrSplit(Name, '.')[0], IGNORE) then
-        Continue;
 
       if not FDict.ContainsKey(Name) then
       begin
